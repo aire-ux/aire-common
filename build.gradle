@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'io.freefair.lombok'
+    id 'io.spring.dependency-management'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom "io.sunshower.aire:bom-imported:$version"
+    }
+}
+
+dependencies {
+    ['com.vaadin:flow-server',
+     'com.vaadin:vaadin-icons-flow',
+     'com.vaadin:flow-html-components',
+     'org.springframework:spring-aop'
+    ].each {
+        implementation it
+    }
+}
+
