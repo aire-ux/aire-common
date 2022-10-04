@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
 }
 
+apply from: "$rootDir/tasks/revisions.gradle"
 
 dependencyManagement {
     imports {
