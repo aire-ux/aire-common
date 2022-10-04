@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'io.freefair.lombok'
     id 'io.spring.dependency-management'
 }
@@ -26,3 +27,93 @@ dependencies {
     }
 }
 
+
+publishing {
+
+    repositories {
+        mavenLocal()
+
+        maven {
+            credentials {
+                username "$mavenRepositoryUsername"
+                password "$mavenRepositoryPassword"
+            }
+            url "$mavenRepositoryUrl"
+        }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task testJar(type: Jar) {
+        archiveClassifier = 'tests'
+        from sourceSets.test.output
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        archiveClassifier = 'javadoc'
+    }
+
+    publications {
+
+        pluginMaven(MavenPublication) {
+
+            /**
+             * components source
+             */
+            from components.java
+
+            /**
+             * maven coordinates
+             */
+            groupId = project.group
+            version = project.version
+            artifactId = project.name
+
+            /**
+             * included artifacts
+             */
+
+            artifact testJar
+            artifact sourcesJar
+            artifact javadocJar
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Sunshower Aire'
+                description = 'Sunshower UX Libraries'
+                url = 'https://github.com/aire-ux/aire-ux'
+                licenses {
+                    license {
+                        name = 'The Gnu Affero Public License, Version 3.0'
+                        url = 'http://www.opensource.org/licenses/AGPL-3.0'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'josiah'
+                        name = 'Josiah Haswell'
+                        email = 'josiah@sunshower.io'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/aire-ux/aire-wizard.git'
+                    developerConnection = 'scm:git:ssh://github.com/aire-ux/aire-wizard.git'
+                    url = 'https://www.sunshower.io/'
+                }
+            }
+        }
+
+    }
+
+}
