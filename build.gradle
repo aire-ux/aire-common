@@ -14,7 +14,7 @@ apply from: "$rootDir/tasks/revisions.gradle"
 
 dependencyManagement {
     imports {
-        mavenBom "io.sunshower.aire:bom-imported:$version"
+        mavenBom "io.sunshower.aire:bom-imported:$aireCoreVersion"
     }
 }
 
